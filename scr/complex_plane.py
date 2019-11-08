@@ -159,6 +159,10 @@ class ComplexNumber:
         else:
             return False
 
+    def is_real(self):
+        if math.isclose(self._im, .0, abs_tol=1e-09):
+            return True, self._re
+
     def __neg__(self):
         return ComplexNumber(- self._re, - self._im)
 

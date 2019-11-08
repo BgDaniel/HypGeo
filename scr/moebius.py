@@ -18,6 +18,9 @@ class Moeb:
     def d(self):
         return self._d
 
+    def check_coeff(c):
+
+
     def __init__(self, a, b, c, d):
         """
         Parameters
@@ -40,6 +43,12 @@ class Moeb:
             c = ComplexNumber(c, .0)
         if type(d) is float:
             d = ComplexNumber(d, .0)
+
+
+        else:
+            raise Exception('Coefficient a must be real!')
+
+
         self._a = a
         self._b = b
         self._c = c
@@ -90,9 +99,43 @@ class Moeb:
 
         return (o.inverse()) * self * o
 
+    def __truediv__(self, o):
+        """Multiplies instance from left with the inverse of o.
+
+        Parameters
+        ----------
+        o : Moeb
+            Moebius transformation to be inverted and multiplied from left with instance o
+
+        Returns
+        -------
+        ComplexNumber
+            Left division of instance by o
+        """ 
+        assert type(o) is Moeb, "%s is not of type \"Moeb\"!" % str(o)
+
+        return self * o.inv()
+
     def inv(self):
         """Returns the (group) inverse of instance."""
         return Moeb(self._d, - self._b, - self._c, self._a)
+
+    def __eq__(self, o):
+        if type(o) is not Moeb:
+            return False
+        elif math.isclose(self._a, o.a, abs_tol=1e-09) and math.isclose(self._b, o.b, abs_tol=1e-09) \
+            and math.isclose(self._c, o.c, abs_tol=1e-09) and math.isclose(self._d, o.d, abs_tol=1e-09):
+            return True
+        else:
+            return False
+
+    def rnd(max, min, samples):
+        rnd_moeb = []
+        rnds = np.random.uniform(max, min, 4 * samples)
+        for i in range(0, samples):
+            rnd_moeb.append(Moeb(rnds[4 * i], rnds[4 * i + 1], rnds[4 * i + 2], rnds[4 * i + 3]))
+
+        return rnd_moeb
 
     def plot(self, rectanlge):
         return None
