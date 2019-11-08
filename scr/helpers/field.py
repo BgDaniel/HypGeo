@@ -7,7 +7,7 @@ def commutative_portperty_add(a, b, c):
 def neutral_element_add(a, neutral):
     return (a + neutral) - a
 
-def inv_elemement_add(a, a_inv, neutral):
+def inv_element_add(a, a_inv, neutral):
     return (a + a_inv) - neutral
 
 
@@ -20,7 +20,7 @@ def commutative_portperty_mul(a, b, c):
 def neutral_element_mul(a, neutral):
     return (a * neutral) - a
 
-def inv_elemement_mul(a, a_inv, neutral):
+def inv_element_mul(a, a_inv, neutral):
     return (a * a_inv) - neutral
 
 

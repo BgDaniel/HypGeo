@@ -33,6 +33,30 @@ class TestComplexNumber(unittest.TestCase):
         for i in range(0, NUMBER_TESTS):
             self.assertEqual(Z[i].inv(), Z[i].conj() / (Z[i].norm_sq()))
 
+    def test_inverse_mul(self):
+        Z = ComplexNumber.rnd(-50, +50, NUMBER_TESTS)
+
+        for i in range(0, NUMBER_TESTS):
+            self.assertEqual(inv_element_mul(Z[i], Z[i].inv(), ONE), ZERO)
+
+    def test_inverse_add(self):
+        Z = ComplexNumber.rnd(-50, +50, NUMBER_TESTS)
+
+        for i in range(0, NUMBER_TESTS):
+            self.assertEqual(inv_element_add(Z[i], - Z[i], ZERO), ZERO)
+
+    def test_neutral_add(self):
+        Z = ComplexNumber.rnd(-50, +50, NUMBER_TESTS)
+
+        for i in range(0, NUMBER_TESTS):
+            self.assertEqual(neutral_element_add(Z[i], ZERO), ZERO)
+
+    def test_neutral_mul(self):
+        Z = ComplexNumber.rnd(-50, +50, NUMBER_TESTS)
+
+        for i in range(0, NUMBER_TESTS):
+            self.assertEqual(neutral_element_mul(Z[i], ONE), ZERO)
+
     def test_real_im_conj1(self):
         Z = ComplexNumber.rnd(-50, +50, NUMBER_TESTS)
 
