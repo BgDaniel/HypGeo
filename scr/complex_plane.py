@@ -246,7 +246,7 @@ class ComplexNumber:
         ComplexNumber
             Array of size n=samples of random complex numbers in upper half space bounded by max_x, min_x, max_y
         """ 
-        return [[np.random.uniform(min_x, max_x), np.random.uniform(.0, max_y)] for i in range(0, samples) ]
+        return [ComplexNumber(np.random.uniform(min_x, max_x), np.random.uniform(.0, max_y)) for i in range(0, samples)]
 
 _i = ComplexNumber(0, 1)
 

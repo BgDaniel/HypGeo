@@ -1,5 +1,6 @@
 from complex_plane import *
 from moebius import Moeb, MoebConj
+from geometry import Line, LineType
 
 def moeb_to(z0, z1):
     """Returns the Moebius transformation mapping the complex number z0 to z1.
@@ -140,7 +141,7 @@ def refl_line(x):
     """
     return MoebConj()
 
-def line_to_Line(l_0, l_1):
+def line_to_line(l_0, l_1):
     """Returns the Moebius transformation mapping the geodesic line l_0 to l_1.
 
     Parameters
@@ -196,10 +197,10 @@ def circ_to_vert(c, v):
     Moeb
         Moebius transformation mapping the geodesic circle to the geodesic vertical line
     """
-    u = vert.Absc
+    u = v.Absc
     return Moeb(1.0, u, .0, 1.0) * circ_to_Yaxis(c)
 
-def circ_to_Yaxis(c):
+def circ_to_Yaxis(circ):
     """Returns the Moebius transformation mapping the geodesic circle to the y-axis.
 
     Parameters
@@ -212,13 +213,13 @@ def circ_to_Yaxis(c):
     Moeb
         Moebius transformation mapping the geodesic circle to the y-axis
     """
-    c = c.Center
-    r = c.Radius
+    c = circ.Center
+    r = circ.Radius
 
     return Moeb(1 / (math.sqrt(2.0 * r)), - c / (math.sqrt(2.0 * r)) + math.sqrt(r / 2.0), 
         - 1 / (math.sqrt(2.0 * r)), c / (math.sqrt(2.0 * r)) + math.sqrt(r / 2.0))
 
-def vert_to_vert(v_0, vl_1):
+def vert_to_vert(v_0, v_1):
     """Returns the Moebius transformation mapping the geodesic, vertical line v_0 to the vertical line v_1.
 
     Parameters
@@ -233,9 +234,9 @@ def vert_to_vert(v_0, vl_1):
     Moeb
         Moebius transformation mapping the geodesic, vertical line v_0 to the vertical line v_1
     """
-    return Moeb(1.0, v_0.z1.re - v_1.z0.re, .0, 1.0)
+    return Moeb(1.0, v_1.Absc - v_0.Absc, .0, 1.0)
 
-def circle_to_circle(c_0, c_1):
+def circ_to_circ(c_0, c_1):
     """Returns the Moebius transformation mapping the geodesic circle c_0 to the circle c_1.
 
     Parameters
@@ -270,4 +271,4 @@ def reflection(l):
     Moeb
         Moebius reflection along the geodesic line l
     """
-    return refl_0(1.0).conjugate(line_to_tine(l, unit_circle))
+    return refl_0(1.0).conjugate(line_to_line(l, unit_circle))

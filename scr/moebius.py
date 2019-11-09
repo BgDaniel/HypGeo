@@ -1,5 +1,6 @@
 import numpy as np
 from complex_plane import *
+from geometry import *
 
 class MoebGen:
     """A class representing general Moebius transformations (of the connected unit component) and their operation on the upper half plane."""
@@ -58,8 +59,18 @@ class MoebGen:
         self._det = self._a * self._d - self._b * self._c
 
     def __call__(self, z):
-        assert type(z) is ComplexNumber, 'z has to be acomplex number!'
+        if type(z) is Line:
+            return self.map_line(z)
+        assert type(z) is ComplexNumber or type(z) is Line, 'z has to be a complex number!'
         return (z * self._a + self._b) / (z * self._c + self._d)
+
+    def map_line(self, l):        
+        if l.Type == LineType.VERTICAL:
+            z_0, z_1 = ComplexNumber(l.Absc, 1.0), ComplexNumber(l.Absc, 10.0)
+        else: 
+            z_0, z_1 = ComplexNumber(l.Center + l.Radius * math.sin(math.pi / 4.0), l.Radius * math.cos(math.pi / 4.0)), \
+                ComplexNumber(l.Center - l.Radius * math.sin(math.pi / 4.0), l.Radius * math.cos(math.pi / 4.0))
+        return Line(self(z_0), self(z_1))
 
     def inv(self):
         """Returns the (group) inverse of instance."""

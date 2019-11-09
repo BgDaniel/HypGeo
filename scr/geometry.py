@@ -1,5 +1,6 @@
 import enum
 from complex_plane import *
+import math
 
 class LineType(enum.Enum):
     CIRCLE = 1
@@ -82,5 +83,26 @@ class Line:
                     return True
                 else: 
                     return False
+
+    def rnd_c(max_r, min_c, max_c, samples):
+        rnd_c = []
+        R, C = np.random.uniform(.0, max_r, samples), np.random.uniform(min_c, max_c, samples)
+
+        for i in range(0, samples):
+            z_0, z_1 = ComplexNumber(C[i] + R[i] * math.sin(math.pi / 4.0), R[i] * math.cos(math.pi / 4.0)), \
+                ComplexNumber(C[i] - R[i] * math.sin(math.pi / 4.0), R[i] * math.cos(math.pi / 4.0))        
+            rnd_c.append(Line(z_0, z_1))
+
+        return rnd_c
+
+    def rnd_v(min_absc, max_absc, samples):
+        rnd_v = []
+        Absc = np.random.uniform(min_absc, max_absc, samples)
+
+        for i in range(0, samples):
+            z_0, z_1 = ComplexNumber(Absc[i], 1.0), ComplexNumber(Absc[i], 31.0)        
+            rnd_v.append(Line(z_0, z_1))
+
+        return rnd_v
 
 unit_circle = Line(ComplexNumber(- 1.0 / (math.sqrt(2.0)), 1.0 / (math.sqrt(2.0))), ComplexNumber(+ 1.0 / (math.sqrt(2.0)), 1.0 / (math.sqrt(2.0)))) 
