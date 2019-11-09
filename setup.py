@@ -4,14 +4,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="HypGeo", # Replace with your own username
+    name="hypgeo", # Replace with your own username
     version="1.0.0",
     author="Daniel Berger",
     author_email="daniel.berger@l-p-a.com",
     description="Small library for simple algebraic and geometric operations on the upper half plane, such as Moebius transformations",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/BgDaniel/HypGeo",
+    url="https://github.com/BgDaniel/hpygeo",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
