@@ -1,3 +1,4 @@
+import numpy as np
 from complex_plane import *
 
 class Moeb:
@@ -18,9 +19,6 @@ class Moeb:
     def d(self):
         return self._d
 
-    def check_coeff(c):
-
-
     def __init__(self, a, b, c, d):
         """
         Parameters
@@ -32,22 +30,18 @@ class Moeb:
             coefficient c_12 in matrix representation
         c : float or (real) ComplexNumerr
             coefficient c_21 in matrix representation
-        a : float or ComplexNumer
+        d : float or ComplexNumer
             coefficient c_22 in matrix representation
         """
-        if type(a) is float:
-            a = ComplexNumber(a, .0)
-        if type(b) is float:
-            b = ComplexNumber(b, .0)
-        if type(c) is float:
-            c = ComplexNumber(c, .0)
-        if type(d) is float:
-            d = ComplexNumber(d, .0)
 
+        #check whether coefficients are real
+        assert type(a) is float or type(a) is np.float64, 'A must be of type float!'
+        assert type(b) is float or type(b) is np.float64, 'A must be of type float!'
+        assert type(c) is float or type(c) is np.float64, 'A must be of type float!'
+        assert type(d) is float or type(d) is np.float64, 'A must be of type float!'        
 
-        else:
-            raise Exception('Coefficient a must be real!')
-
+        #check if a * d - b * c = 1
+        assert math.isclose(a * d - b * c, 1.0, abs_tol=1e-09), 'Coefficients do not satisfy determinant condition!'
 
         self._a = a
         self._b = b
@@ -131,9 +125,18 @@ class Moeb:
 
     def rnd(max, min, samples):
         rnd_moeb = []
-        rnds = np.random.uniform(max, min, 4 * samples)
+
         for i in range(0, samples):
-            rnd_moeb.append(Moeb(rnds[4 * i], rnds[4 * i + 1], rnds[4 * i + 2], rnds[4 * i + 3]))
+            coeffs = np.random.uniform(max, min, 4)
+            det = coeffs[0] * coeffs[3] - coeffs[1] * coeffs[2]
+            while det == .0:
+                coeffs = np.random.uniform(max, min, 4)
+            if det < .0:
+                coeffs[0] *= - 1.0
+                coeffs[1] *= - 1.0
+                det = coeffs[0] * coeffs[3] - coeffs[1] * coeffs[2]
+            coeffs = coeffs / math.sqrt(det)
+            rnd_moeb.append(Moeb(coeffs[0], coeffs[1], coeffs[2], coeffs[3]))
 
         return rnd_moeb
 

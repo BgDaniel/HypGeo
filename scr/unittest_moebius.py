@@ -15,7 +15,21 @@ class TestComplexNumber(unittest.TestCase):
             a, b, c = A[i], B[i], C[i]    
             self.assertEqual(associative_property(a, b, c), IDENTITY)
 
+    def test_neutral_element(self):
+        M = Moeb.rnd(-50, +50, NUMBER_TESTS)
+
+        for m in M:
+            self.assertEqual(neutral_element_r(m, IDENTITY), IDENTITY)
+            self.assertEqual(neutral_element_l(m, IDENTITY), IDENTITY)
+
+    def test_inv_element(self):
+        M = Moeb.rnd(-50, +50, NUMBER_TESTS)
+
+        for m in M:
+            self.assertEqual(inv_element_r(m, m.inv()), IDENTITY)
+            self.assertEqual(inv_element_r(m, m.inv()), IDENTITY)
 
 
 if __name__ == '__main__':
     unittest.main()
+
