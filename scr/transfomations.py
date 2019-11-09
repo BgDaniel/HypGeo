@@ -1,4 +1,5 @@
 from complex_plane import *
+from moebius import Moeb, MoebConj
 
 def moeb_to(z0, z1):
     """Returns the Moebius transformation mapping the complex number z0 to z1.
@@ -105,9 +106,7 @@ def refl_0(R):
     Moeb
         Moebius reflection along the half circle centered at (0,0) of radius R
     """
-    iR = ComplexNumber(.0, R)
-    idivR = ComplexNumber(.0, 1.0 / R)
-    return MoebConj(.0, iR, idivR, .0)  
+    return MoebConj(.0, R, 1.0 / R, .0)  
 
 def refl_circ(u, R):
     """Returns the Moebius reflection along the half circle centered at (u,0) of radius R.

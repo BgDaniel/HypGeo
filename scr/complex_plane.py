@@ -205,13 +205,48 @@ class ComplexNumber:
         """ 
         return ComplexNumber(vec[0], vec[1])
 
-    def rnd(max, min, samples):
+    def rnd(min, max, samples):
+        """Returns an array with length n=samples of random complex numbers whose real and imaginary parts
+            are bounded by min from below and by max from above.
+
+        Parameters
+        ----------
+        min : float
+            lower boundary for real and imaginary part of randomly generated complex numbers  
+        max : float
+            upper boundary for real and imaginary part of randomly generated complex numbers 
+
+        Returns
+        -------
+        ComplexNumber
+            Array of size n=samples of bounded, random complex numbers
+        """ 
         rnd_z = []
-        rnds = np.random.uniform(max, min, 2 * samples)
+        rnds = np.random.uniform(min, max, 2 * samples)
         for i in range(0, samples):
             rnd_z.append(ComplexNumber(rnds[2 * i], rnds[2 * i + 1]))
 
         return rnd_z
+
+    def rnd_in_HPlus(min_x, max_x, max_y, samples):
+        """Returns an array with length n=samples of random complex numbers in upper half space whose real part 
+           is within the range [min_x, max_x] and whose imaginary part is bounded by y_max from above
+
+        Parameters
+        ----------
+        min_x : float
+            lower boundary for real part of randomly generated complex numbers
+        max_x : float
+            upper boundary for real part of randomly generated complex numbers 
+        max_y : float
+            upper boundary for imaginary part of randomly generated complex numbers  
+
+        Returns
+        -------
+        ComplexNumber
+            Array of size n=samples of random complex numbers in upper half space bounded by max_x, min_x, max_y
+        """ 
+        return [[np.random.uniform(min_x, max_x), np.random.uniform(.0, max_y)] for i in range(0, samples) ]
 
 _i = ComplexNumber(0, 1)
 

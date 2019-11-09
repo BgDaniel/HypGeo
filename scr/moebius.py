@@ -1,8 +1,9 @@
 import numpy as np
 from complex_plane import *
 
-class Moeb:
-    """A class representing Moebius transformations (of the connected unit component) and their operation on the upper half plane."""
+class MoebGen:
+    """A class representing general Moebius transformations (of the connected unit component) and their operation on the upper half plane."""
+    
     @property
     def a(self):
         return self._a
@@ -18,6 +19,16 @@ class Moeb:
     @property
     def d(self):
         return self._d
+
+    @property
+    def Det(self):
+        return self._det
+
+    def IsGenMoeb(op):
+        def _op(inst, o):
+            assert isinstance(o, MoebGen), "%s is not of type \"MoebGen\"!" % str(o)
+            return op(inst, o)
+        return _op
 
     def __init__(self, a, b, c, d):
         """
@@ -38,25 +49,23 @@ class Moeb:
         assert type(a) is float or type(a) is np.float64, 'A must be of type float!'
         assert type(b) is float or type(b) is np.float64, 'A must be of type float!'
         assert type(c) is float or type(c) is np.float64, 'A must be of type float!'
-        assert type(d) is float or type(d) is np.float64, 'A must be of type float!'        
-
-        #check if a * d - b * c = 1
-        assert math.isclose(a * d - b * c, 1.0, abs_tol=1e-09), 'Coefficients do not satisfy determinant condition!'
-
+        assert type(d) is float or type(d) is np.float64, 'A must be of type float!' 
+        
         self._a = a
         self._b = b
         self._c = c
         self._d = d
+        self._det = self._a * self._d - self._b * self._c
 
     def __call__(self, z):
-        if type(z) is np.array or type(z) is np.ndarray:
-            assert len(z) == 2, "z has wrong dimension!"
-            z = ComplexNumber(z[0], z[1])
-        elif type(z) is not ComplexNumber:
-            raise Exception("Argument z is neither of type array nor type ComplexNumber!") 
-
+        assert type(z) is ComplexNumber, 'z has to be acomplex number!'
         return (z * self._a + self._b) / (z * self._c + self._d)
 
+    def inv(self):
+        """Returns the (group) inverse of instance."""
+        return MoebGen(self._d / self._det, - self._b / self._det, - self._c / self._det, self._a / self._det)
+
+    @IsGenMoeb
     def __mul__(self, o):
         """Right multiplicates of instance transformation with o.
 
@@ -70,9 +79,7 @@ class Moeb:
         Moeb
             Right multiplication of instance transformation with o
         """ 
-        assert type(o) is Moeb or type(o) is MoebConj, "%s is not of type \"Moeb\"!" % str(o)
-
-        return Moeb(self._a * o.a + self._b * o.c, self._a * o.b + self._b * o.d, 
+        return MoebGen(self._a * o.a + self._b * o.c, self._a * o.b + self._b * o.d, 
             self._c * o.a + self._d * o.c, self._c * o.b + self._d * o.d)
 
     def conj(self, o):
@@ -89,8 +96,6 @@ class Moeb:
             (Group) conjugation of instance transformation by multiplying o from the right and its inverse
             from the left
         """ 
-        assert type(o) is Moeb, "%s is not of type \"Moeb\"!" % str(o)
-
         return (o.inverse()) * self * o
 
     def __truediv__(self, o):
@@ -106,16 +111,14 @@ class Moeb:
         ComplexNumber
             Left division of instance by o
         """ 
-        assert type(o) is Moeb, "%s is not of type \"Moeb\"!" % str(o)
-
         return self * o.inv()
 
-    def inv(self):
-        """Returns the (group) inverse of instance."""
-        return Moeb(self._d, - self._b, - self._c, self._a)
+    def __str__(self):
+        """Returns a string representation of of instance."""
+        return "((a = {}, b={}), (c = {}, d={}))".format(self._a, self._b, self._c, self._d)
 
     def __eq__(self, o):
-        if type(o) is not Moeb:
+        if type(o) is not MoebGen:
             return False
         elif math.isclose(self._a, o.a, abs_tol=1e-09) and math.isclose(self._b, o.b, abs_tol=1e-09) \
             and math.isclose(self._c, o.c, abs_tol=1e-09) and math.isclose(self._d, o.d, abs_tol=1e-09):
@@ -123,14 +126,29 @@ class Moeb:
         else:
             return False
 
-    def rnd(max, min, samples):
+moeb_id = MoebGen(1.0, .0, .0, 1.0)
+
+class Moeb(MoebGen):
+    def __init__(self, a, b, c, d):
+        #check if a * d - b * c = 1
+        assert math.isclose(a * d - b * c, 1.0, abs_tol=1e-09), 'Coefficients do not satisfy determinant condition!'
+        MoebGen.__init__(self, a, b, c, d)
+
+    def __call__(self, z):
+        if type(z) is np.array or type(z) is np.ndarray:
+            assert len(z) == 2, "z has wrong dimension!"
+            z = ComplexNumber(z[0], z[1])
+        
+        return MoebGen.__call__(self, z)
+    
+    def rnd(min, max, samples):
         rnd_moeb = []
 
         for i in range(0, samples):
-            coeffs = np.random.uniform(max, min, 4)
+            coeffs = np.random.uniform(min, max, 4)
             det = coeffs[0] * coeffs[3] - coeffs[1] * coeffs[2]
             while det == .0:
-                coeffs = np.random.uniform(max, min, 4)
+                coeffs = np.random.uniform(min, max, 4)
             if det < .0:
                 coeffs[0] *= - 1.0
                 coeffs[1] *= - 1.0
@@ -143,18 +161,36 @@ class Moeb:
     def plot(self, rectanlge):
         return None
 
-class MoebConj(Moeb):
+class MoebConj(MoebGen):
     """A class representing Moebius transformations (of the second connected component) and their operation on the upper half plane."""
     def __init__(self, a, b, c, d):
-        Moeb.__init__(self, a, b, c, d)
+        #check if a * d - b * c = - 1
+        assert math.isclose(a * d - b * c, - 1.0, abs_tol=1e-09), 'Coefficients do not satisfy determinant condition!'
+        MoebGen.__init__(self, a, b, c, d)
 
     def __call__(self, z):
-        if type(z) is np.array or type(z) is np.ndarray or type(z) is list:
+        if type(z) is np.array or type(z) is np.ndarray:
             assert len(z) == 2, "z has wrong dimension!"
             z = ComplexNumber(z[0], z[1])
-        elif type(z) is not ComplexNumber:
-            raise Exception("Argument z is neither of type array nor type ComplexNumber!") 
-        return Moeb.__call__(self, z.conj())
+        
+        return MoebGen.__call__(self, z.conj())
+    
+    def rnd(min, max, samples):
+        rnd_moeb = []
+
+        for i in range(0, samples):
+            coeffs = np.random.uniform(min, max, 4)
+            det = coeffs[0] * coeffs[3] - coeffs[1] * coeffs[2]
+            while det == .0:
+                coeffs = np.random.uniform(min, max, 4)
+            if det > .0:
+                coeffs[0] *= - 1.0
+                coeffs[1] *= - 1.0
+                det = coeffs[0] * coeffs[3] - coeffs[1] * coeffs[2]
+            coeffs = coeffs / math.sqrt(- det)
+            rnd_moeb.append(MoebConj(coeffs[0], coeffs[1], coeffs[2], coeffs[3]))
+
+        return rnd_moeb
 
 class MoebCorr(Moeb):
     def __init__(self, a, b, c, d, rho):

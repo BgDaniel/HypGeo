@@ -66,4 +66,21 @@ class Line:
             self._center = 1.0 / 2.0 * (y1 ** 2 - y0 ** 2 - x0 ** 2 + x1 ** 2) / (x1 - x0)
             self._radius = 1.0 / ( 2.0 * (abs(x1 - x0))) * math.sqrt(((x1 - x0) ** 2 + (y1 - y0) ** 2) * ((x1 - x0) ** 2 + (y1 + y0) ** 2))
 
+    def __eq__(self, o):
+        if type(o) != Line:
+            return False
+        elif o.Type != self._type:
+            return False
+        else:
+            if o.Type == LineType.VERTICAL:
+                if math.isclose(self._absc, o.Absc, abs_tol=1e-09):
+                    return True
+                else: 
+                    return False
+            else:
+                if math.isclose(self._radius, o.Radius, abs_tol=1e-09) and math.isclose(self._center, o.Center, abs_tol=1e-09):
+                    return True
+                else: 
+                    return False
+
 unit_circle = Line(ComplexNumber(- 1.0 / (math.sqrt(2.0)), 1.0 / (math.sqrt(2.0))), ComplexNumber(+ 1.0 / (math.sqrt(2.0)), 1.0 / (math.sqrt(2.0)))) 
