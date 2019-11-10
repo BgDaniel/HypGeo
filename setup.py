@@ -11,7 +11,7 @@ setuptools.setup(
     description="Small library for simple algebraic and geometric operations on the upper half plane, such as Moebius transformations",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/BgDaniel/hpygeo",
+    url="https://github.com/BgDaniel/hypgeo",
     packages=['hypgeo', 'hypgeo.helpers'],
     classifiers=[
         "Programming Language :: Python :: 3",
