@@ -32,6 +32,11 @@ class Line:
     def z1(self):
         return self._z1
 
+    
+    @property
+    def Level(self):
+        return self._level
+
     def __init__(self, z0, z1):
         """
         Parameters
@@ -57,6 +62,7 @@ class Line:
             self._absc = self._z0.re
             self._center = None
             self._radius = float('inf')
+            self._level = lambda x, y: y - self._absc
         else:
             self._type = LineType.CIRCLE
             self._absc = None
@@ -66,6 +72,7 @@ class Line:
             y1 = self._z1.im
             self._center = 1.0 / 2.0 * (y1 ** 2 - y0 ** 2 - x0 ** 2 + x1 ** 2) / (x1 - x0)
             self._radius = 1.0 / ( 2.0 * (abs(x1 - x0))) * math.sqrt(((x1 - x0) ** 2 + (y1 - y0) ** 2) * ((x1 - x0) ** 2 + (y1 + y0) ** 2))
+            self._level = lambda x, y: (x - self._center) * (x - self._center) + y * y - self._radius * self._radius
 
     def __eq__(self, o):
         if type(o) != Line:
@@ -104,5 +111,43 @@ class Line:
             rnd_v.append(Line(z_0, z_1))
 
         return rnd_v
+
+
+class Position(enum.Enum):
+    IN = 1
+    OUT = 2
+    ON = 3
+
+def opposite(position):
+    if position == Position.IN:
+        return Position.OUT
+    elif position == Position.OUT:
+        return Position.IN
+    else:
+        return Position.ON
+
+class HalfSpace:
+    def __init__(self, line):
+        self._line = line
+        self._refl = refl(line)
+        
+    def position(self, x):
+        if type(x) is np.array or type(x) is np.ndarray or type(x) is list:
+            assert len(x) == 2, "z has wrong dimension!"
+        elif type(x) is ComplexNumber:
+            x = x.ToVector()
+        else:
+            raise Exception("Argument z is neither of type array nor type ComplexNumber!") 
+        level = self._line.Level(x[0], x[1])
+
+        if level < .0:
+            return Position.IN
+        elif level == .0:
+            return Position.ON
+        else:
+            return Position.OUT
+
+    def refl(self, x):
+        return self._refl(x) 
 
 unit_circle = Line(ComplexNumber(- 1.0 / (math.sqrt(2.0)), 1.0 / (math.sqrt(2.0))), ComplexNumber(+ 1.0 / (math.sqrt(2.0)), 1.0 / (math.sqrt(2.0)))) 
