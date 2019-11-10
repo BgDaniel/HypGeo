@@ -1,6 +1,6 @@
 import numpy as np
-from complex_plane import *
-from geometry import *
+from hypgeo.complex_plane import *
+from hypgeo.geometry import *
 
 class MoebGen:
     """A class representing general Moebius transformations (of the connected unit component) and their operation on the upper half plane."""

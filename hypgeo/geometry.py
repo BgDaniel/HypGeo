@@ -1,5 +1,5 @@
 import enum
-from complex_plane import *
+from hypgeo.complex_plane import *
 import math
 
 class LineType(enum.Enum):

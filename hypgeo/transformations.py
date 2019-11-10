@@ -1,6 +1,6 @@
-from complex_plane import *
-from moebius import Moeb, MoebConj
-from geometry import Line, LineType
+from hypgeo.complex_plane import *
+from hypgeo.moebius import Moeb, MoebConj
+from hypgeo.geometry import Line, LineType
 
 def moeb_to(z0, z1):
     """Returns the Moebius transformation mapping the complex number z0 to z1.

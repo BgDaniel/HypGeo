@@ -1,10 +1,10 @@
 import unittest
 import numpy as np
 
-from complex_plane import _i, ComplexNumber, RootOfUnity
-from transformations import line_to_line, moeb_to, refl_0, vert_to_circ, circ_to_vert
-from moebius import moeb_id
-from geometry import Line
+from hypgeo.complex_plane import _i, ComplexNumber, RootOfUnity
+from hypgeo.transformations import line_to_line, moeb_to, refl_0, vert_to_circ, circ_to_vert
+from hypgeo.moebius import moeb_id
+from hypgeo.geometry import Line
 
 NUMBER_TESTS = 1000
 ZERO = ComplexNumber(.0, .0)

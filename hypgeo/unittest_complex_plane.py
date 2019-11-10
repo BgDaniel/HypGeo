@@ -1,8 +1,8 @@
 import unittest
 import sys
 import numpy as np
-from complex_plane import _i, ComplexNumber, RootOfUnity
-from helpers.field import *
+from hypgeo.complex_plane import _i, ComplexNumber, RootOfUnity
+from hypgeo.helpers.field import *
 
 NUMBER_TESTS = 1000
 ZERO = ComplexNumber(.0, .0)

@@ -1,6 +1,6 @@
 import unittest
-from moebius import Moeb, MoebConj, moeb_id
-from helpers.group import *
+from hypgeo.moebius import Moeb, MoebConj, moeb_id
+from hypgeo.helpers.group import *
 
 NUMBER_TESTS = 1000
 
