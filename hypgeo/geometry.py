@@ -2,10 +2,6 @@ import enum
 from hypgeo.complex_plane import *
 import math
 
-class LineType(enum.Enum):
-    CIRCLE = 1
-    VERTICAL = 2
-
 class GeodesicLine:
     def line_trough(z0, z1):
         assert z0 != z1, "z0 and z1 have to be different in order to determine a geodesic line in upper half plane!"
@@ -18,10 +14,10 @@ class GeodesicLine:
         if math.isclose(z0.re, z1.re, abs_tol=1e-09):
             return Vertical(z0.re)
         else:
-            x0 = self._z0.re
-            y0 = self._z0.im
-            x1 = self._z1.re
-            y1 = self._z1.im
+            x0 = z0.re
+            y0 = z0.im
+            x1 = z1.re
+            y1 = z1.im
             center = 1.0 / 2.0 * (y1 ** 2 - y0 ** 2 - x0 ** 2 + x1 ** 2) / (x1 - x0)
             radius = 1.0 / ( 2.0 * (abs(x1 - x0))) * math.sqrt(((x1 - x0) ** 2 + (y1 - y0) ** 2) * ((x1 - x0) ** 2 + (y1 + y0) ** 2))
             return HalfCircle(radius, center)
@@ -46,7 +42,7 @@ class Vertical(GeodesicLine):
             else: 
                 return False
 
-    def rnd_v(min_absc, max_absc, samples):
+    def rnd(min_absc, max_absc, samples):
         rnd_v = []
         Absc = np.random.uniform(min_absc, max_absc, samples)
 
@@ -81,18 +77,12 @@ class HalfCircle(GeodesicLine):
             else: 
                 return False
 
-    def rnd_c(max_r, min_c, max_c, samples):
+    def rnd(max_r, min_c, max_c, samples):
         rnd_c = []
         R, C = np.random.uniform(.0, max_r, samples), np.random.uniform(min_c, max_c, samples)
 
         for i in range(0, samples):
             rnd_c.append(HalfCircle(R[i], C[i]))
-
-
-            HalfCircle
-            z_0, z_1 = ComplexNumber(C[i] + R[i] * math.sin(math.pi / 4.0), R[i] * math.cos(math.pi / 4.0)), \
-                ComplexNumber(C[i] - R[i] * math.sin(math.pi / 4.0), R[i] * math.cos(math.pi / 4.0))        
-            rnd_c.append(Line(z_0, z_1))
 
         return rnd_c
 

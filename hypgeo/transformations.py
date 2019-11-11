@@ -1,6 +1,6 @@
 from hypgeo.complex_plane import *
 from hypgeo.moebius import Moeb, MoebConj
-from hypgeo.geometry import Line, LineType
+from hypgeo.geometry import Vertical, HalfCircle, unit_circle
 
 def moeb_to(z0, z1):
     """Returns the Moebius transformation mapping the complex number z0 to z1.
@@ -156,11 +156,11 @@ def line_to_line(l_0, l_1):
     Moeb
         Moebius transformation mapping the geodesic line l_0 to l_1
     """
-    if l_0.Type == LineType.VERTICAL and l_1.Type == LineType.VERTICAL:
+    if type(l_0) == Vertical and type(l_1) == Vertical:
         return vert_to_vert(l_0, l_1)
-    elif l_0.Type == LineType.VERTICAL and l_1.Type == LineType.CIRCLE:
+    elif type(l_0) == Vertical and type(l_1) == HalfCircle:
         return vert_to_circ(l_0, l_1)
-    elif l_0.Type == LineType.CIRCLE and l_1.Type == LineType.VERTICAL:
+    elif type(l_0) == HalfCircle and type(l_1) == Vertical:
         return circ_to_vert(l_0, l_1)
     else:
         return circ_to_circ(l_0, l_1)
@@ -258,7 +258,7 @@ def circ_to_circ(c_0, c_1):
     
     return moeb_to(ComplexNumber(c0, r0), ComplexNumber(c1, r1))
 
-def reflection(l):
+def refl(l):
     """Returns the Moebius reflection along the geodesic line l.
 
     Parameters
@@ -271,4 +271,4 @@ def reflection(l):
     Moeb
         Moebius reflection along the geodesic line l
     """
-    return refl_0(1.0).conjugate(line_to_line(l, unit_circle))
+    return refl_0(1.0).conj(line_to_line(l, unit_circle))

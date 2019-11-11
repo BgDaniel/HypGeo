@@ -59,18 +59,19 @@ class MoebGen:
         self._det = self._a * self._d - self._b * self._c
 
     def __call__(self, z):
-        if type(z) is Line:
+        if isinstance(z, GeodesicLine):
             return self.map_line(z)
-        assert type(z) is ComplexNumber or type(z) is Line, 'z has to be a complex number!'
+        assert type(z) is ComplexNumber, 'z has to be a complex number!'
         return (z * self._a + self._b) / (z * self._c + self._d)
 
     def map_line(self, l):        
-        if l.Type == LineType.VERTICAL:
+        if type(l) == Vertical:
             z_0, z_1 = ComplexNumber(l.Absc, 1.0), ComplexNumber(l.Absc, 10.0)
         else: 
             z_0, z_1 = ComplexNumber(l.Center + l.Radius * math.sin(math.pi / 4.0), l.Radius * math.cos(math.pi / 4.0)), \
                 ComplexNumber(l.Center - l.Radius * math.sin(math.pi / 4.0), l.Radius * math.cos(math.pi / 4.0))
-        return Line(self(z_0), self(z_1))
+        u_0, u_1 = self.__call__(z_0), self.__call__(z_1)
+        return GeodesicLine.line_trough(u_0, u_1)
 
     def inv(self):
         """Returns the (group) inverse of instance."""
@@ -107,7 +108,7 @@ class MoebGen:
             (Group) conjugation of instance transformation by multiplying o from the right and its inverse
             from the left
         """ 
-        return (o.inverse()) * self * o
+        return (o.inv()) * self * o
 
     def __truediv__(self, o):
         """Multiplies instance from left with the inverse of o.
