@@ -64,12 +64,8 @@ class MoebGen:
         assert type(z) is ComplexNumber, 'z has to be a complex number!'
         return (z * self._a + self._b) / (z * self._c + self._d)
 
-    def map_line(self, l):        
-        if type(l) == Vertical:
-            z_0, z_1 = ComplexNumber(l.Absc, 1.0), ComplexNumber(l.Absc, 10.0)
-        else: 
-            z_0, z_1 = ComplexNumber(l.Center + l.Radius * math.sin(math.pi / 4.0), l.Radius * math.cos(math.pi / 4.0)), \
-                ComplexNumber(l.Center - l.Radius * math.sin(math.pi / 4.0), l.Radius * math.cos(math.pi / 4.0))
+    def map_line(self, l):  
+        z_0, z_1 = l.get_two_points()      
         u_0, u_1 = self.__call__(z_0), self.__call__(z_1)
         return GeodesicLine.line_trough(u_0, u_1)
 

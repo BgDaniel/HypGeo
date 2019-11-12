@@ -50,7 +50,23 @@ class Vertical(GeodesicLine):
             rnd_v.append(Vertical(absc))
 
         return rnd_v
+
+    def get_two_points(self):
+        return ComplexNumber(self._absc, 1.0), ComplexNumber(l._absc, 10.0)
+
+    def conj(self):
+        return VerticalConj(self._absc)
+
+class VerticalConj(Vertical):
+    def __init__(self, absc):
+        Vertical.__init__(self, absc)
+
+    def get_two_points(self):
+        return ComplexNumber(self._absc, - 1.0), ComplexNumber(self._absc, - 10.0)
     
+    def conj(self):
+        return Vertical(self._absc)
+
 class HalfCircle(GeodesicLine):
     @property
     def Radius(self):       
@@ -67,6 +83,10 @@ class HalfCircle(GeodesicLine):
     def __init__(self, radius, center):
         self._radius = radius
         self._center = center
+
+    def get_two_points(self):
+        return ComplexNumber(self._center + self._radius * math.sin(math.pi / 4.0), self._radius * math.cos(math.pi / 4.0)), \
+                ComplexNumber(self._center - self._radius * math.sin(math.pi / 4.0), self._radius * math.cos(math.pi / 4.0))
 
     def __eq__(self, o):
         if type(o) != HalfCircle:
@@ -86,7 +106,23 @@ class HalfCircle(GeodesicLine):
 
         return rnd_c
 
+    def conj(self):
+        return HalfCircleConj(self._radius, self._center)
+
 unit_circle = HalfCircle(1.0, .0)
+
+class HalfCircleConj(HalfCircle):
+    def __init__(self, radius, center):
+        self._radius = radius
+        self._center = center
+        HalfCircle.__init__(self, radius, center)
+
+    def get_two_points(self):
+        return ComplexNumber(self._center + self._radius * math.sin(math.pi / 4.0), - self._radius * math.cos(math.pi / 4.0)), \
+                ComplexNumber(self._center - self._radius * math.sin(math.pi / 4.0), - self._radius * math.cos(math.pi / 4.0))
+
+    def conj(self):
+        return HalfCircle(self._radius, self._center)
 
 class Position(enum.Enum):
     IN = 1

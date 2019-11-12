@@ -45,14 +45,14 @@ class TestTransfomations(unittest.TestCase):
 
         for i in range(0, NUMBER_TESTS):
             self.assertEqual(vert_to_circ(V[i], C[i])(V[i]), C[i])
-    """
+
     def test_circ_to_vert(self):
         C = HalfCircle.rnd(10.0, - 10.0, + 10.0, NUMBER_TESTS)
         V = Vertical.rnd(- 10.0, + 10.0, NUMBER_TESTS)
 
         for i in range(0, NUMBER_TESTS):
             self.assertEqual(circ_to_vert(C[i], V[i])(C[i]), V[i])
-
+    """
     def test_refl_circ(self):
         C = HalfCircle.rnd(10.0, - 10.0, + 10.0, NUMBER_TESTS)
 
@@ -62,7 +62,7 @@ class TestTransfomations(unittest.TestCase):
     """
     def test_refl_0(self):
         self.assertEqual(refl_0(1.0)(unit_circle), unit_circle)
-
+ 
 
 
 
