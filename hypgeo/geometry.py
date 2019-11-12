@@ -10,8 +10,8 @@ class GeodesicLine:
         assert z0 != z1, "A line in HPlus can only be determined by two different complex numbers!"
         if z0.im:
             dummy = .0
-        assert z0.im > 0, "z0 is not contained in HPlus!"
-        assert z1.im > 0, "z1 is not contained in HPlus!"
+        assert z0.im > .0, "z0 is not contained in HPlus! Imaginary part is {}".format(str(z0.im))
+        assert z1.im > .0, "z1 is not contained in HPlus! Imaginary part is {}".format(str(z1.im))
 
         if math.isclose(z0.re, z1.re, abs_tol=1e-09):
             return Vertical(z0.re)
@@ -152,3 +152,22 @@ class HalfSpace:
 
     def refl(self, x):
         return self._refl(x) 
+
+    def rnd(min_re, max_re, max_im, samples):
+        rnd_z = []
+        Re, Im = np.random.uniform(min_re, max_re, samples), np.random.uniform(.0, max_im, samples)
+
+        for i in range(0, samples):
+            rnd_z.append(ComplexNumber(Re[i], Im[i]))
+
+        return rnd_z
+
+class Flow:
+    def __init__(self, moeb_param):
+        self._moeb_param = moeb_param
+
+    def __call__(t, x=None):
+        if x != None:
+            return self._moeb_param(t)(x)
+        else:
+            return self._moeb_param(t)

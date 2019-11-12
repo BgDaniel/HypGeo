@@ -1,4 +1,5 @@
-from hypgeo.complex_plane import *
+import math
+from hypgeo.complex_plane import _i, ComplexNumber
 from hypgeo.moebius import Moeb, MoebConj
 from hypgeo.geometry import Vertical, HalfCircle, unit_circle
 
@@ -62,9 +63,9 @@ def ellip(t, u):
     Moeb
         the element of the one parameter group of Moebius rotations aroutnd the complex number u
     """
-    return ellip_0(t).conj(moeb_to(u, i))
+    return ellip_0(t).conj(moeb_to(u, _i))
       
-def loxod_0(t):
+def loxod(t):
     """Returns an element of the one parameter group of Moebius loxodromic transformations (dilatation in y-direction). 
 
     Parameters
@@ -79,7 +80,7 @@ def loxod_0(t):
     """
     return Moeb(math.exp(.5 * t), .0, .0, math.exp(- .5 * t))
 
-def parab_0(t):
+def parab(t):
     """Returns an element of the one parameter group of Moebius translations in x-direction.
 
     Parameters
