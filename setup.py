@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="hypgeo", # Replace with your own username
-    version="1.0.1",
+    version="1.0.2",
     author="Daniel Berger",
     author_email="daniel.berger@l-p-a.com",
     description="Small library for simple algebraic and geometric operations on the upper half plane, such as Moebius transformations",
