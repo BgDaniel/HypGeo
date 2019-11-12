@@ -8,6 +8,8 @@ class GeodesicLine:
         assert type(z0) is ComplexNumber, "z0 is not of type \"ComplexNumber\"!"
         assert type(z1) is ComplexNumber, "z1 is not of type \"ComplexNumber\"!"
         assert z0 != z1, "A line in HPlus can only be determined by two different complex numbers!"
+        if z0.im:
+            dummy = .0
         assert z0.im > 0, "z0 is not contained in HPlus!"
         assert z1.im > 0, "z1 is not contained in HPlus!"
 
@@ -52,10 +54,7 @@ class Vertical(GeodesicLine):
         return rnd_v
 
     def get_two_points(self):
-        return ComplexNumber(self._absc, 1.0), ComplexNumber(l._absc, 10.0)
-
-    def conj(self):
-        return VerticalConj(self._absc)
+        return ComplexNumber(self._absc, 1.0), ComplexNumber(self._absc, 10.0)
 
 class VerticalConj(Vertical):
     def __init__(self, absc):
@@ -63,9 +62,6 @@ class VerticalConj(Vertical):
 
     def get_two_points(self):
         return ComplexNumber(self._absc, - 1.0), ComplexNumber(self._absc, - 10.0)
-    
-    def conj(self):
-        return Vertical(self._absc)
 
 class HalfCircle(GeodesicLine):
     @property
@@ -106,10 +102,9 @@ class HalfCircle(GeodesicLine):
 
         return rnd_c
 
-    def conj(self):
-        return HalfCircleConj(self._radius, self._center)
-
 unit_circle = HalfCircle(1.0, .0)
+def unit_circle_r(r):
+    return HalfCircle(r, .0)
 
 class HalfCircleConj(HalfCircle):
     def __init__(self, radius, center):
@@ -120,9 +115,6 @@ class HalfCircleConj(HalfCircle):
     def get_two_points(self):
         return ComplexNumber(self._center + self._radius * math.sin(math.pi / 4.0), - self._radius * math.cos(math.pi / 4.0)), \
                 ComplexNumber(self._center - self._radius * math.sin(math.pi / 4.0), - self._radius * math.cos(math.pi / 4.0))
-
-    def conj(self):
-        return HalfCircle(self._radius, self._center)
 
 class Position(enum.Enum):
     IN = 1

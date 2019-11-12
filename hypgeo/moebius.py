@@ -59,14 +59,23 @@ class MoebGen:
         self._det = self._a * self._d - self._b * self._c
 
     def __call__(self, z):
+        if type(z) is np.array or type(z) is np.ndarray:
+            assert len(z) == 2, "z has wrong dimension!"
+            z = ComplexNumber(z[0], z[1])
         if isinstance(z, GeodesicLine):
             return self.map_line(z)
         assert type(z) is ComplexNumber, 'z has to be a complex number!'
+
+        if math.isclose(self._det, - 1.0, abs_tol=1e-09):
+            z = z.conj()
         return (z * self._a + self._b) / (z * self._c + self._d)
+
+    def clone(self):
+        return MoebGen(self._a, self._b, self._c, self._d)
 
     def map_line(self, l):  
         z_0, z_1 = l.get_two_points()      
-        u_0, u_1 = self.__call__(z_0), self.__call__(z_1)
+        u_0, u_1 = MoebGen.__call__(self, z_0), MoebGen.__call__(self, z_1)
         return GeodesicLine.line_trough(u_0, u_1)
 
     def inv(self):
@@ -121,6 +130,34 @@ class MoebGen:
         """ 
         return self * o.inv()
 
+    def __pow__(self, n):
+        """Returns the n-th power of instance transformation with o.
+
+        Parameters
+        ----------
+        n : int
+            Power
+
+        Returns
+        -------
+        Moeb
+            N-th power of instance transformation with o
+        """ 
+
+        if n > 0:
+            pow = self.clone()
+            for i in range(1, n):
+                pow *= self
+        elif n == 0:
+            return moeb_id
+        else:
+            pow = self.clone().inv()
+            inv = self.inv().clone()
+            for i in range(1, - n):
+                pow *= inv
+
+        return pow
+
     def __str__(self):
         """Returns a string representation of of instance."""
         return "((a = {}, b={}), (c = {}, d={}))".format(self._a, self._b, self._c, self._d)
@@ -141,13 +178,6 @@ class Moeb(MoebGen):
         #check if a * d - b * c = 1
         assert math.isclose(a * d - b * c, 1.0, abs_tol=1e-09), 'Coefficients do not satisfy determinant condition!'
         MoebGen.__init__(self, a, b, c, d)
-
-    def __call__(self, z):
-        if type(z) is np.array or type(z) is np.ndarray:
-            assert len(z) == 2, "z has wrong dimension!"
-            z = ComplexNumber(z[0], z[1])
-        
-        return MoebGen.__call__(self, z)
     
     def rnd(min, max, samples):
         rnd_moeb = []
@@ -175,13 +205,6 @@ class MoebConj(MoebGen):
         #check if a * d - b * c = - 1
         assert math.isclose(a * d - b * c, - 1.0, abs_tol=1e-09), 'Coefficients do not satisfy determinant condition!'
         MoebGen.__init__(self, a, b, c, d)
-
-    def __call__(self, z):
-        if type(z) is np.array or type(z) is np.ndarray:
-            assert len(z) == 2, "z has wrong dimension!"
-            z = ComplexNumber(z[0], z[1])
-        
-        return MoebGen.__call__(self, z.conj())
     
     def rnd(min, max, samples):
         rnd_moeb = []

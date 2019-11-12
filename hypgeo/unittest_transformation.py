@@ -4,7 +4,7 @@ import numpy as np
 from hypgeo.complex_plane import _i, ComplexNumber, RootOfUnity
 from hypgeo.transformations import *
 from hypgeo.moebius import moeb_id
-from hypgeo.geometry import Vertical, HalfCircle, unit_circle
+from hypgeo.geometry import Vertical, HalfCircle, unit_circle, unit_circle_r
 
 NUMBER_TESTS = 1000
 ZERO = ComplexNumber(.0, .0)
@@ -52,17 +52,24 @@ class TestTransfomations(unittest.TestCase):
 
         for i in range(0, NUMBER_TESTS):
             self.assertEqual(circ_to_vert(C[i], V[i])(C[i]), V[i])
-    """
+    
     def test_refl_circ(self):
         C = HalfCircle.rnd(10.0, - 10.0, + 10.0, NUMBER_TESTS)
 
         for i in range(0, NUMBER_TESTS):
             self.assertEqual(refl(C[i])(C[i]), C[i])
-            self.assertEqual(refl(C[i] * C[i]), moeb_id)
-    """
+            self.assertEqual(refl(C[i]) * refl(C[i]), moeb_id)
+
+            for n in np.random.randint(-5, 5, 50):
+                self.assertEqual(refl(C[i]) ** n, refl(C[i]) ** (n % 2))
+    
     def test_refl_0(self):
-        self.assertEqual(refl_0(1.0)(unit_circle), unit_circle)
- 
+        for r in np.random.uniform(.0 , + 10.0, NUMBER_TESTS):
+            self.assertEqual(refl_0(r)(unit_circle_r(r)), unit_circle_r(r))
+            self.assertEqual(refl_0(r) * refl_0(r), moeb_id)
+
+            for n in np.random.randint(-5, 5, 50):
+                self.assertEqual(refl_0(r) ** n, refl_0(r) ** (n % 2))
 
 
 
