@@ -79,6 +79,7 @@ class HalfCircle(GeodesicLine):
     def __init__(self, radius, center):
         self._radius = radius
         self._center = center
+        self._level = lambda x, y: (x - self._center) * (x - self._center) + (y - self._center) * (y - self._center) - self._radius * self._radius
 
     def get_two_points(self):
         return ComplexNumber(self._center + self._radius * math.sin(math.pi / 4.0), self._radius * math.cos(math.pi / 4.0)), \
@@ -132,7 +133,6 @@ def opposite(position):
 class HalfSpace:
     def __init__(self, line):
         self._line = line
-        self._refl = refl(line)
         
     def position(self, x):
         if type(x) is np.array or type(x) is np.ndarray or type(x) is list:
@@ -149,10 +149,7 @@ class HalfSpace:
             return Position.ON
         else:
             return Position.OUT
-
-    def refl(self, x):
-        return self._refl(x) 
-
+                    
     def rnd(min_re, max_re, max_im, samples):
         rnd_z = []
         Re, Im = np.random.uniform(min_re, max_re, samples), np.random.uniform(.0, max_im, samples)
